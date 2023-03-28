@@ -76,10 +76,9 @@ for college in college_dict:
             rank = rank.split('(')
             
             if cast and cast in indexing:
-                print(cast, rank[-1].replace(')', ''), rank[0])
                 i = indexing.index(cast)
-                row[i+2] = rank[-1].replace(')', '')
-                row[i+3] = rank[0]
+                row[(2*i)+2] = rank[-1].replace(')', '')
+                row[(2*i)+3] = rank[0]
         worksheet.append(row)
 
 
