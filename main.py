@@ -8,17 +8,14 @@ def extract_data_from_pdf(path):
 
     # Open the PDF file
     with pdfplumber.open(path) as pdf_file:
+
         # Iterate through the pages of the PDF
-        # i = 0
         for page in pdf_file.pages:
-            # if i == 10:
-            #     break
-            # i += 1
 
             # Extract the text from the page
             text = page.extract_text()
 
-            # Use regular expressions to find the college pattern
+            # Use regular expressions to find the college name pattern
             college_pattern = r"\d{4}\s-\s\w+[^\n]*"
             college_match = re.search(college_pattern, text)
 
@@ -28,7 +25,7 @@ def extract_data_from_pdf(path):
 
                 # Check if the college key already exists in the dictionary
                 if college_key not in college_dict:
-                    # If the college key does not exist, add it to the dictionary with an empty dictionary for courses
+                    # If the college key does not exist, add it to the dictionary with an empty list for courses and grades
                     college_dict[college_key] = {'grade':[], 'course':[]}
 
                 # Use regular expressions to find all the course patterns
@@ -38,18 +35,17 @@ def extract_data_from_pdf(path):
                 # Iterate through each course match
                 for course_match in course_matches:
                     course_key = course_match.group().strip()
+
+                    # Added courses to the list of courses in respective colleges
                     college_dict[college_key]['course'].append(course_key)
 
                 # Use pdfplumber to extract tables from the page
                 tables = page.extract_tables()
 
-                # If tables are found, check if they are unique and append them to the list associated with the course key
+                # If tables are found, check if they are unique and append them to the list of grades in respective colleges
                 if tables:
                     for table in tables:
                         college_dict[college_key]['grade'].append(table)
-            else:
-                # If a college match is not found, clear the current college dictionary
-                college_dict = {}
 
     # Return the dictionary of colleges and courses
     return college_dict
@@ -77,7 +73,6 @@ for college in college_dict:
 worksheet.append(header)
 
 for college in college_dict:
-    print(college)
     for course, grade in zip(college_dict[college]['course'], college_dict[college]['grade']):
         row = ['-'] * (len(header)+2)
         row[0] = college
