@@ -18,3 +18,6 @@ pip install -r ./requirements.txt
 ```
 python main.py
 ```
+
+## Configuration
+You can change files at `line 55`  :-  `path = "path/filename.pdf"`
