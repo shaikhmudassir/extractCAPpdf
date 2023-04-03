@@ -73,9 +73,14 @@ for college in college_dict:
 worksheet.append(header)
 
 for college in college_dict:
+    new_college = True
     for course, grade in zip(college_dict[college]['course'], college_dict[college]['grade']):
-        row = ['-'] * (len(header)+2)
-        row[0] = college
+        row = ['0'] * (len(header)+2)
+        if new_college:
+            row[0] = college
+            new_college = False
+        else:
+            row[0] = ""
         row[1] = course
         for cast, rank in zip(grade[0], grade[1]):
             rank = rank.split('(')
